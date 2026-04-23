@@ -89,7 +89,7 @@ const ACTIVITY_LABEL = {
 let state = {
   progress: 0,
   xp: 0,
-  theme: "light",
+  theme: "dark",
   user: null,
   completedLessons: [],
   activity: [],
@@ -213,7 +213,12 @@ function showToast(message, tone = "default") {
 
 function applyTheme() {
   const html = document.documentElement;
-  html.classList.toggle("dark");
+
+  if (state.theme === "dark") {
+    html.classList.add("dark");
+  } else {
+    html.classList.remove("dark");
+  }
 }
 
 function updateThemeButtons() {
@@ -229,13 +234,14 @@ function updateThemeButtons() {
 }
 
 function toggleTheme() {
-  // if (state.theme === "dark") {
-  //   state.theme = "light";
-  // } else {
-  //   state.theme = "dark";
-  // }
+  if (state.theme === "dark") {
+    state.theme = "light";
+  } else {
+    state.theme = "dark";
+  }
 
-  applyTheme();
+  document.documentElement.classList.toggle("dark");
+
   updateThemeButtons();
   saveState();
 
@@ -252,6 +258,23 @@ function toggleTheme() {
     state.theme === "dark" ? "Mode gelap aktif" : "Mode terang aktif",
   );
 }
+
+applyTheme();
+updateThemeButtons();
+saveState();
+
+showToast(
+  state.theme === "dark"
+    ? "Tema diubah ke mode gelap."
+    : "Tema diubah ke mode terang.",
+  "info",
+);
+
+pushActivity(
+  "theme",
+  "Tema diubah",
+  state.theme === "dark" ? "Mode gelap aktif" : "Mode terang aktif",
+);
 
 function toggleMobileMenu() {
   const menu = document.getElementById("mobileMenu");
@@ -733,6 +756,8 @@ function renderAll() {
   renderDashboardFeed();
   renderMaterialsFeed();
   renderLessonGrid();
+
+  renderProfileImage(); // 🔥 TAMBAH INI
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -760,6 +785,45 @@ document.addEventListener("DOMContentLoaded", () => {
     if (event.key === "Escape") closeLoginModal();
   });
 });
+
+function toggleProfileMenu() {
+  const menu = document.getElementById("profileMenu");
+  menu.classList.toggle("hidden");
+}
+
+function triggerUpload() {
+  document.getElementById("uploadInput").click();
+}
+
+function handleUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function (e) {
+    const imageData = e.target.result;
+
+    if (!state.user) state.user = {};
+    state.user.photo = imageData;
+
+    saveState();
+    renderProfileImage(); // ← INI WAJIB ADA
+  };
+
+  reader.readAsDataURL(file);
+}
+
+function renderProfileImage() {
+  const img = document.getElementById("profileImage");
+
+  if (!img) return;
+
+  img.src =
+    state.user?.photo ||
+    "https://ui-avatars.com/api/?name=User&background=ccc&color=555";
+}
+
 
 window.toggleTheme = toggleTheme;
 window.toggleMobileMenu = toggleMobileMenu;
