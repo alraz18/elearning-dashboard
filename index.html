@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="id" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CloverLearn | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { darkMode: "class" };
+    </script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link
+      rel="icon"
+      href="https://api.iconify.design/solar:book-bookmark-bold.svg"
+    />
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        background-image:
+          radial-gradient(
+            circle at top left,
+            rgba(168, 85, 247, 0.08),
+            transparent 28%
+          ),
+          radial-gradient(
+            circle at top right,
+            rgba(236, 72, 153, 0.08),
+            transparent 24%
+          ),
+          radial-gradient(
+            circle at bottom center,
+            rgba(14, 165, 233, 0.06),
+            transparent 28%
+          );
+        background-attachment: fixed;
+      }
+      ::selection {
+        background: rgba(217, 70, 239, 0.25);
+      }
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: rgba(148, 163, 184, 0.16);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(
+          180deg,
+          rgba(168, 85, 247, 0.9),
+          rgba(236, 72, 153, 0.9)
+        );
+        border-radius: 999px;
+      }
+      .glass {
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+      }
+    </style>
+  </head>
+
+  <body
+    class="bg-slate-50 text-slate-900 dark:bg-[#050816] dark:text-slate-100 transition-colors duration-300"
+  >
+    <div class="min-h-screen flex">
+      <aside
+        class="hidden lg:flex lg:w-84 flex-col p-6 bg-slate-950 text-white border-r border-white/10 relative overflow-hidden"
+      >
+        <div
+          class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,.16),transparent_28%)] pointer-events-none"
+        ></div>
+        <div class="relative flex items-center gap-4 mb-10">
+          <div
+            class="w-14 h-14 rounded-[1.5rem] bg-gradient-to-br from-fuchsia-400 via-violet-500 to-cyan-400 grid place-items-center font-black text-slate-950 shadow-lg shadow-fuchsia-500/20"
+          >
+            E
+          </div>
+          <div>
+            <h1 class="text-2xl font-black tracking-tight">CloverLearn</h1>
+            <p class="text-xs text-slate-400">Dashboard Pembelajaran Modern</p>
+          </div>
+        </div>
+
+        <div
+          class="relative rounded-[2rem] p-5 bg-white/5 border border-white/10 mb-6"
+        >
+          <p class="text-xs text-slate-400">Status akun</p>
+          <p id="sidebarUserName" class="mt-2 text-2xl font-black">Guest</p>
+          <p id="userEmail" class="text-xs text-slate-400 mt-1">Belum login</p>
+        </div>
+
+        <nav class="relative space-y-2 text-sm">
+          <a
+            href="index.html"
+            class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-white/10 text-white shadow-sm"
+          >
+            <iconify-icon icon="solar:home-bold"></iconify-icon> Dashboard
+          </a>
+          <a
+            href="materi.html"
+            class="flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-white/10 text-slate-200 transition"
+          >
+            <iconify-icon icon="solar:book-bold"></iconify-icon> Materi
+          </a>
+          <a
+            href="kuis.html"
+            class="flex items-center gap-3 px-4 py-3 rounded-2xl hover:bg-white/10 text-slate-200 transition"
+          >
+            <iconify-icon icon="solar:clipboard-check-bold"></iconify-icon> Kuis
+          </a>
+        </nav>
+
+        <div
+          class="relative mt-10 rounded-[2rem] p-5 bg-white/5 border border-white/10"
+        >
+          <p class="text-xs text-slate-400">Progress selesai</p>
+          <div class="mt-3 flex items-end justify-between">
+            <div>
+              <p id="completedCountSide" class="text-3xl font-black">0</p>
+              <p class="text-xs text-slate-400">materi selesai</p>
+            </div>
+            <div class="text-right">
+              <p class="text-xs text-slate-400">Level</p>
+              <p id="sidebarLevel" class="text-2xl font-black">1</p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="relative mt-4 rounded-[2rem] p-5 bg-white/5 border border-white/10"
+        >
+          <p class="text-xs text-slate-400">Target berikutnya</p>
+          <div class="mt-3 grid grid-cols-2 gap-3">
+            <div class="rounded-2xl bg-white/5 p-3 border border-white/10">
+              <p class="text-[11px] text-slate-400">Level berikut</p>
+              <p id="remainingXpText" class="mt-1 text-lg font-black">
+                200 XP lagi
+              </p>
+            </div>
+            <div class="rounded-2xl bg-white/5 p-3 border border-white/10">
+              <p class="text-[11px] text-slate-400">Milestone</p>
+              <p id="nextMilestoneText" class="mt-1 text-lg font-black">
+                5 materi
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative mt-auto pt-8 text-xs text-slate-500">
+          <p>LKPD 11 • Frontend Project</p>
+        </div>
+      </aside>
+
+      <div class="flex-1 flex flex-col">
+        <header
+          class="sticky top-0 z-40 glass bg-slate-50/75 dark:bg-[#050816]/80 border-b border-slate-200/70 dark:border-white/10"
+        >
+          <div
+            class="px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between gap-4"
+          >
+            <div class="flex items-center gap-3">
+              <button
+                onclick="toggleMobileMenu()"
+                class="lg:hidden w-11 h-11 rounded-2xl bg-slate-950 text-white dark:bg-white dark:text-slate-900 shadow-lg"
+              >
+                ☰
+              </button>
+              <div>
+                <h2 class="text-lg sm:text-xl font-black">
+                  Dashboard Interaktif
+                </h2>
+                <p
+                  class="text-xs sm:text-sm text-slate-500 dark:text-slate-400"
+                >
+                  Belajar lebih rapi, modern, dan responsif
+                </p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 sm:gap-3">
+              <button
+                data-theme-toggle
+                onclick="toggleTheme()"
+                class="w-11 h-11 rounded-2xl bg-slate-200 dark:bg-slate-800 grid place-items-center"
+              >
+                <iconify-icon icon="solar:moon-bold"></iconify-icon>
+              </button>
+              <button
+                onclick="openLoginModal()"
+                class="px-4 sm:px-5 py-3 rounded-2xl bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-500 text-white font-semibold shadow-lg shadow-fuchsia-500/20 hover:scale-[1.01] transition"
+              >
+                Login
+              </button>
+            </div>
+          </div>
+
+          <div id="mobileMenu" class="hidden lg:hidden px-4 pb-4">
+            <div
+              class="rounded-[1.75rem] bg-slate-950 text-white p-3 space-y-2 shadow-2xl border border-white/10"
+            >
+              <a
+                href="index.html"
+                class="block px-4 py-3 rounded-2xl bg-white/10"
+                >Dashboard</a
+              >
+              <a
+                href="materi.html"
+                class="block px-4 py-3 rounded-2xl hover:bg-white/10"
+                >Materi</a
+              >
+              <a
+                href="kuis.html"
+                class="block px-4 py-3 rounded-2xl hover:bg-white/10"
+                >Kuis</a
+              >
+            </div>
+          </div>
+        </header>
+
+        <main class="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6 sm:space-y-8">
+          <section
+            class="relative overflow-hidden rounded-[2.25rem] p-6 sm:p-8 lg:p-10 text-white shadow-2xl shadow-violet-950/20 bg-gradient-to-br from-slate-950 via-violet-950 to-fuchsia-700"
+          >
+            <div
+              class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,.28),transparent_28%)]"
+            ></div>
+            <div
+              class="absolute -right-16 -top-16 w-56 h-56 rounded-full bg-fuchsia-400/20 blur-3xl"
+            ></div>
+            <div
+              class="relative grid xl:grid-cols-[1.4fr_0.8fr] gap-8 items-end"
+            >
+              <div class="max-w-3xl">
+                <p
+                  class="inline-flex items-center gap-2 text-xs font-semibold bg-white/15 px-3 py-1 rounded-full mb-4"
+                >
+                  ✨ Modern Learning Experience
+                </p>
+                <h3
+                  class="text-3xl sm:text-4xl xl:text-5xl font-black leading-tight"
+                >
+                  Halo, <span id="userName">Siswa</span>. Bangun dashboard
+                  belajar yang terasa seperti produk premium.
+                </h3>
+                <p class="mt-4 text-sm sm:text-base text-white/85 max-w-2xl">
+                  Selesaikan materi, kumpulkan XP, buka badge, dan simpan
+                  progress otomatis di browser.
+                </p>
+                <div class="mt-6 flex flex-wrap gap-3">
+                  <a
+                    href="materi.html"
+                    class="px-5 py-3 rounded-2xl bg-white text-slate-950 font-semibold shadow-lg hover:shadow-xl transition"
+                  >
+                    Mulai Materi
+                  </a>
+                  <a
+                    href="kuis.html"
+                    class="px-5 py-3 rounded-2xl bg-white/10 border border-white/15 font-semibold hover:bg-white/15 transition"
+                  >
+                    Coba Kuis
+                  </a>
+                </div>
+              </div>
+
+              <div class="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
+                <div
+                  class="rounded-[1.75rem] p-4 bg-white/10 border border-white/15"
+                >
+                  <p class="text-xs text-white/70">Progress</p>
+                  <p id="progressPercentText" class="mt-1 text-3xl font-black">
+                    0%
+                  </p>
+                </div>
+                <div
+                  class="rounded-[1.75rem] p-4 bg-white/10 border border-white/15"
+                >
+                  <p class="text-xs text-white/70">XP</p>
+                  <p id="xpTextHero" class="mt-1 text-3xl font-black">0 XP</p>
+                </div>
+                <div
+                  class="rounded-[1.75rem] p-4 bg-white/10 border border-white/15"
+                >
+                  <p class="text-xs text-white/70">Tema aktif</p>
+                  <p class="mt-1 text-3xl font-black">UI</p>
+                </div>
+                <div
+                  class="rounded-[1.75rem] p-4 bg-white/10 border border-white/15"
+                >
+                  <p class="text-xs text-white/70">Status</p>
+                  <p class="mt-1 text-3xl font-black">Live</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div
+              class="rounded-[1.75rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-5 shadow-sm hover:shadow-lg transition"
+            >
+              <p class="text-sm text-slate-500 dark:text-slate-400">
+                Materi Tersedia
+              </p>
+              <p class="text-3xl font-black mt-2">5</p>
+              <p class="text-xs text-slate-400 mt-1">Topik pembelajaran</p>
+            </div>
+
+            <div
+              class="rounded-[1.75rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-5 shadow-sm hover:shadow-lg transition"
+            >
+              <p class="text-sm text-slate-500 dark:text-slate-400">Kuis</p>
+              <p class="text-3xl font-black mt-2">1</p>
+              <p class="text-xs text-slate-400 mt-1">Interaktif dan otomatis</p>
+            </div>
+
+            <div
+              class="rounded-[1.75rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-5 shadow-sm hover:shadow-lg transition"
+            >
+              <p class="text-sm text-slate-500 dark:text-slate-400">Progress</p>
+              <p id="progressText" class="text-3xl font-black mt-2">0%</p>
+              <div
+                class="mt-3 h-3 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden"
+              >
+                <div
+                  id="progressBar"
+                  class="h-full rounded-full bg-gradient-to-r from-fuchsia-500 via-violet-500 to-cyan-400"
+                  style="width: 0%"
+                ></div>
+              </div>
+            </div>
+
+            <div
+              class="rounded-[1.75rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-5 shadow-sm hover:shadow-lg transition"
+            >
+              <p class="text-sm text-slate-500 dark:text-slate-400">XP</p>
+              <p id="xpText" class="text-3xl font-black mt-2">0 XP</p>
+              <p id="levelText" class="text-xs text-slate-400 mt-1">Level 1</p>
+            </div>
+          </section>
+
+          <section class="grid xl:grid-cols-3 gap-6">
+            <div
+              class="xl:col-span-2 rounded-[2rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-6 shadow-sm"
+            >
+              <div class="flex items-center justify-between gap-4">
+                <div>
+                  <h4 class="text-xl font-black">Progress Belajar</h4>
+                  <p class="text-sm text-slate-500 dark:text-slate-400">
+                    Tandai materi selesai untuk menaikkan progress dan XP.
+                  </p>
+                </div>
+                <button
+                  onclick="completeSelectedLesson()"
+                  class="px-4 py-3 rounded-2xl bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-500 text-white font-semibold shadow-lg shadow-fuchsia-500/20 hover:scale-[1.01] transition"
+                >
+                  + Selesaikan Materi
+                </button>
+              </div>
+
+              <div
+                class="mt-6 h-4 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden"
+              >
+                <div
+                  id="progressBarBig"
+                  class="h-full rounded-full bg-gradient-to-r from-amber-400 via-fuchsia-500 to-cyan-400"
+                  style="width: 0%"
+                ></div>
+              </div>
+
+              <div class="mt-6 grid sm:grid-cols-2 gap-4">
+                <div
+                  class="rounded-2xl bg-slate-50 dark:bg-slate-950/40 p-4 border border-slate-200 dark:border-white/10"
+                >
+                  <p class="text-xs uppercase tracking-wide text-slate-500">
+                    Materi selesai
+                  </p>
+                  <p id="completedCountMain" class="text-2xl font-black mt-2">
+                    0
+                  </p>
+                </div>
+                <div
+                  class="rounded-2xl bg-slate-50 dark:bg-slate-950/40 p-4 border border-slate-200 dark:border-white/10"
+                >
+                  <p class="text-xs uppercase tracking-wide text-slate-500">
+                    Target harian
+                  </p>
+                  <p class="text-2xl font-black mt-2">3 materi</p>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="rounded-[2rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-6 shadow-sm"
+            >
+              <h4 class="text-xl font-black">Badge</h4>
+              <p class="text-sm text-slate-500 dark:text-slate-400">
+                Unlock otomatis berdasarkan XP.
+              </p>
+              <div id="badgeGrid" class="mt-5 grid grid-cols-2 gap-3"></div>
+            </div>
+          </section>
+
+          <section
+            class="rounded-[2rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-6 shadow-sm"
+          >
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <h4 class="text-xl font-black">
+                  Katalog Materi dari API Gratis
+                </h4>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                  Konten berikut diambil dari DummyJSON untuk menampilkan data
+                  dinamis seperti aplikasi nyata.
+                </p>
+              </div>
+              <a
+                href="materi.html"
+                class="text-sm font-semibold text-fuchsia-600 dark:text-fuchsia-300"
+                >Buka halaman materi →</a
+              >
+            </div>
+            <div
+              id="feedGrid"
+              class="mt-6 grid md:grid-cols-2 xl:grid-cols-3 gap-4"
+            ></div>
+          </section>
+
+          <section class="grid xl:grid-cols-2 gap-6">
+            <div
+              class="rounded-[2rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-6 shadow-sm"
+            >
+              <div>
+                <h4 class="text-xl font-black">Riwayat Materi Selesai</h4>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                  Tersimpan otomatis di browser.
+                </p>
+              </div>
+              <div
+                id="completedList"
+                class="mt-5 grid sm:grid-cols-2 gap-3"
+              ></div>
+            </div>
+
+            <div
+              class="rounded-[2rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-6 shadow-sm"
+            >
+              <div>
+                <h4 class="text-xl font-black">Aktivitas Terbaru</h4>
+                <p class="text-sm text-slate-500 dark:text-slate-400">
+                  Log kecil yang membantu dashboard terasa hidup.
+                </p>
+              </div>
+              <div id="activityFeed" class="mt-5 space-y-3"></div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div
+      id="loginModal"
+      class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm p-4"
+    >
+      <div
+        class="max-w-md mx-auto mt-20 rounded-[2rem] bg-white dark:bg-slate-900 p-6 border border-slate-200 dark:border-white/10 shadow-2xl"
+      >
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h3 class="text-2xl font-black">Login</h3>
+          </div>
+          <button
+            onclick="closeLoginModal()"
+            class="w-10 h-10 rounded-2xl bg-slate-100 dark:bg-slate-800"
+          >
+            ✕
+          </button>
+        </div>
+
+        <form id="loginForm" class="mt-6 space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-2">Email</label>
+            <input
+              id="loginEmail"
+              type="email"
+              placeholder="nama@email.com"
+              class="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 outline-none focus:ring-2 focus:ring-fuchsia-500"
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">Password</label>
+            <input
+              id="loginPassword"
+              type="password"
+              placeholder="••••••••"
+              class="w-full px-4 py-3 rounded-2xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 outline-none focus:ring-2 focus:ring-fuchsia-500"
+            />
+          </div>
+
+          <div
+            id="loginFeedback"
+            class="text-sm text-slate-500 dark:text-slate-400"
+          ></div>
+
+          <button
+            type="submit"
+            class="w-full px-4 py-3 rounded-2xl bg-gradient-to-r from-violet-600 via-fuchsia-500 to-pink-500 text-white font-semibold"
+          >
+            Login
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div
+      id="toastContainer"
+      class="fixed top-6 right-6 z-[999] space-y-3 pointer-events-none"
+    ></div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
